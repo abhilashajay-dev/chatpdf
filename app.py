@@ -2,6 +2,8 @@ import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
 
 
 
@@ -30,6 +32,14 @@ def get_chunks(raw_text):
 
 
 
+def get_vectorstore(chunks):
+    embeddings = OpenAIEmbeddings()
+    vector_store = FAISS.from_texts(chunks, embeddings)
+    return vector_store
+
+
+
+
 
 
 
@@ -53,9 +63,10 @@ def main():
 
                 # text Chuncks
                 chunks = get_chunks(raw_text)
-                st.write(chunks)
 
                 # create vector Store
+                vector_store = get_vectorstore(chunks)
+
 
 
 
